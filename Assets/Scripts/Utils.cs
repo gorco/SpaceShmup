@@ -7,7 +7,8 @@ public enum BoundsTest
 	center, // Is the center of the GameObject on screen?
 	onScreen, // Are the bounds entirely on screen?
 	offScreen // Are the bounds entirely off screen?
-}
+}
+
 public class Utils : MonoBehaviour
 {
 	//============================= Bounds Functions =============================\\
@@ -76,8 +77,8 @@ public class Utils : MonoBehaviour
 	}
 	// This is the private static field that camBounds uses
 	static private Bounds _camBounds; // 2
-	// This function is used by camBounds to set _camBounds and can also be
-	// called directly.
+									  // This function is used by camBounds to set _camBounds and can also be
+									  // called directly.
 	public static void SetCameraBounds(Camera cam = null)
 	{ // 3
 	  // If no Camera was passed in, use the main Camera
@@ -219,5 +220,33 @@ public class Utils : MonoBehaviour
 				return (off);
 		}
 		return (Vector3.zero);
+	}
+
+	//============================ Transform Functions ===========================\\
+	// This function will iteratively climb up the transform.parent tree
+	// until it either finds a parent with a tag != "Untagged" or no parent
+	public static GameObject FindTaggedParent(GameObject go)
+	{
+		// If this gameObject has a tag
+		if (go.tag != "Untagged")
+		{
+			// then return this gameObject
+			return (go);
+		}
+		// If there is no parent of this Transform
+		if (go.transform.parent == null)
+		{
+			// We've reached the top of the hierarchy with no interesting tag
+			// So return null
+			return (null);
+		}
+		// Otherwise, recursively climb up the tree
+		return (FindTaggedParent(go.transform.parent.gameObject));
+	}
+	
+	// This version of the function handles things if a Transform is passed in
+	public static GameObject FindTaggedParent(Transform t)
+	{
+		return (FindTaggedParent(t.gameObject));
 	}
 }

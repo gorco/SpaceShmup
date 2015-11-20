@@ -8,8 +8,12 @@ public class Hero : MonoBehaviour
 	public float speed = 30;
 	public float rollMult = -45;
 	public float pitchMult = 30;
+
+	public float gameRestartDelay = 2f;
+
 	// Ship status information
-	public float shieldLevel = 1;
+	[SerializeField]
+	private float _shieldLevel = 1; // Add the underscore!
 	public bool ____________________________;
 	public Bounds bounds;
 
@@ -24,7 +28,7 @@ public class Hero : MonoBehaviour
 		// Pull in information from the Input class
 		float xAxis = Input.GetAxis("Horizontal"); // 1
 		float yAxis = Input.GetAxis("Vertical"); // 1
-		
+
 		// Change transform.position based on the axes
 		Vector3 pos = transform.position;
 		pos.x += xAxis * speed * Time.deltaTime;
@@ -43,4 +47,61 @@ public class Hero : MonoBehaviour
 		// Rotate the ship to make it feel more dynamic // 2
 		transform.rotation = Quaternion.Euler(yAxis * pitchMult, xAxis * rollMult, 0);
 	}
+
+	// This variable holds a reference to the last triggering GameObject
+	public GameObject lastTriggerGo = null;
+
+	void OnTriggerEnter(Collider other)
+	{
+		// Find the tag of other.gameObject or its parent GameObjects
+		GameObject go = Utils.FindTaggedParent(other.gameObject);
+		// If there is a parent with a tag
+		if (go != null)
+		{
+			// Make sure it's not the same triggering go as last time
+			if (go == lastTriggerGo)
+			{
+				return;
+			}
+			lastTriggerGo = go;
+			if (go.tag == "Enemy")
+			{
+				// If the shield was triggered by an enemy
+				// Decrease the level of the shield by 1
+				shieldLevel--;
+				// Destroy the enemy
+				Destroy(go);
+			}
+			else
+			{
+				print("Triggered: " + go.name);
+			}
+		}
+		else
+		{
+			// Otherwise announce the original other.gameObject
+			print("Triggered: " + other.gameObject.name);
+		}
+	}
+
+	public float shieldLevel
+	{
+		get
+		{
+			return (_shieldLevel);
+		}
+		set
+		{
+			_shieldLevel = Mathf.Min(value, 4);
+			// If the shield is going to be set to less than zero
+			if (value < 0)
+			{
+				Destroy(this.gameObject);
+				// Tell Main.S to restart the game after a delay
+				Main.S.DelayedRestart(gameRestartDelay);
+			}
+		}
+	}
+
+
 }
