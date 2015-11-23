@@ -74,8 +74,8 @@ public class PowerUp : MonoBehaviour {
 			c = letter.color;
 			c.a = 1f - (u * 0.5f);
 			letter.color = c;
-		}
-	}
+		} 
+    }
 
 	// This SetType() differs from those on Weapon and Projectile
 	public void SetType(WeaponType wt)

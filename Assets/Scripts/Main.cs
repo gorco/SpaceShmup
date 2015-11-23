@@ -95,6 +95,7 @@ public class Main : MonoBehaviour
 			// Random.value generates a value between 0 & 1 (though never == 1)
 			// If the e.powerUpDropChance is 0.50f, a PowerUp will be generated
 			// 50% of the time. For testing, it's now set to 1f.
+			
 			// Choose which PowerUp to pick
 			// Pick one from the possibilities in powerUpFrequency
 			int ndx = Random.Range(0, powerUpFrequency.Length);

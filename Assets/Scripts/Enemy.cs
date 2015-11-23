@@ -103,7 +103,7 @@ public class Enemy : MonoBehaviour {
 	}
 	void UnShowDamage() {
 		for ( int i=0; i<materials.Length; i++ ) {
-			materials[i].color = originalColors[i];
+            materials[i].color = originalColors[i];
 		}
 	}
 }
